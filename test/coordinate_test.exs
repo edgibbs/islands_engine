@@ -38,4 +38,22 @@ defmodule CoordinateTest do
       Coordinate.set_in_island(coordinate, "giligans_island")
     end
   end
+
+  test "can make a guess marks it as guessed" do
+    {:ok, coordinate} = Coordinate.start_link
+    Coordinate.guess(coordinate)
+    assert Coordinate.guessed?(coordinate) == true
+  end
+
+  test "get a hit" do
+    {:ok, coordinate} = Coordinate.start_link
+    Coordinate.set_in_island(coordinate, :giligans_island)
+    Coordinate.guess(coordinate)
+    assert Coordinate.hit?(coordinate) == true
+  end
+
+  test "returns a string" do
+    {:ok, coordinate} = Coordinate.start_link
+    assert Coordinate.to_string(coordinate) == "(in_island:none, guessed:false)"
+  end
 end
