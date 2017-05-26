@@ -27,4 +27,17 @@ defmodule IslandSetTest do
     assert Agent.get(island_set.s_shape, &(&1)) == []
     assert Agent.get(island_set.square, &(&1)) == []
   end
+
+  test "can represent with a string" do
+    {:ok, island_set} = IslandSet.start_link
+    expected_output = """
+    %IslandSet{atoll => []
+    dot => []
+    l_shape => []
+    s_shape => []
+    square => []
+    }
+    """ |> String.strip
+    assert IslandSet.to_string(island_set) == expected_output
+  end
 end
