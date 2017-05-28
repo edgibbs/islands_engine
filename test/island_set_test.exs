@@ -1,7 +1,7 @@
 defmodule IslandSetTest do
   use ExUnit.Case
 
-  alias IslandsEngine.{Island,IslandSet}
+  alias IslandsEngine.IslandSet
 
   test "can start an agent" do
     {:ok, pid} = IslandSet.start_link
