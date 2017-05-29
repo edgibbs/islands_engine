@@ -1,16 +1,11 @@
 defmodule IslandsEngine.Game do
+  defstruct player1: :none, player2: :none
   use GenServer
-  require IEx;
 
-  alias IslandsEngine.Game
+  alias IslandsEngine.{Game, Player}
 
-  def start_link do
-    GenServer.start_link(Game, %{}, [])
-  end
-
-  def handle_info(:first, state) do
-    IO.puts "This message has been handled by the handle_info/2, matching on :first."
-    {:noreply, state}
+  def start_link(name) when not is_nil name do
+    GenServer.start_link(__MODULE__, name)
   end
 
   def call_demo(game) do
@@ -19,5 +14,11 @@ defmodule IslandsEngine.Game do
 
   def handle_call(:demo, _from, state) do
     {:reply, state, state}
+  end
+
+  def init(name) do
+    {:ok, player1} = Player.start_link(name)
+    {:ok, player2} = Player.start_link()
+    {:ok, %Game{player1: player1, player2: player2}}
   end
 end

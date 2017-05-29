@@ -1,21 +1,24 @@
 defmodule GameTest do
   use ExUnit.Case, async: true
 
-  import ExUnit.CaptureIO
-
-  alias IslandsEngine.Game
+  alias IslandsEngine.{Game}
 
   setup do
-    {:ok, game} = Game.start_link
+    {:ok, game} = Game.start_link("George P. Burdell")
     {:ok, game: game}
   end
 
-  test "handles a :first message" do
-    assert capture_io(fn -> Game.handle_info(:first, %{}) end) == "This message has been handled by the handle_info/2, matching on :first.\n"
+  test "can't start a game without a name" do
+    assert_raise FunctionClauseError, "no function clause matching in IslandsEngine.Game.start_link/1", fn ->
+      Game.start_link(nil)
+    end
   end
 
-  test "handles calls", %{game: game} do
-    state = GenServer.call(game, :demo)
-    assert state == %{}
+  test "initializes two players", %{game: game} do
+    state = Game.call_demo(game)
+    player1_state = Agent.get(state.player1, &(&1))
+    assert player1_state.name == "George P. Burdell"
+    player2_state = Agent.get(state.player2, &(&1))
+    assert player2_state.name == :none
   end
 end
